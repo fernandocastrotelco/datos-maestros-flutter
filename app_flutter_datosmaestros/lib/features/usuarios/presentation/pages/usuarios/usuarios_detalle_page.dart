@@ -2,7 +2,7 @@ import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/us
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../constants.dart';
+import '../../../../../constants.dart';
 
 class UsuariosDetallePage extends StatelessWidget {
   @override

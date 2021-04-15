@@ -28,5 +28,5 @@ class Pagina<T> extends Equatable {
   }
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [numero, tamanio, total, registros, consulta, data];
 }

@@ -1,7 +1,7 @@
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/usuario.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../constants.dart';
+import '../../../../../../constants.dart';
 
 class UsuarioCard extends StatelessWidget {
   const UsuarioCard({Key key, this.isActive, this.usuario, this.press})

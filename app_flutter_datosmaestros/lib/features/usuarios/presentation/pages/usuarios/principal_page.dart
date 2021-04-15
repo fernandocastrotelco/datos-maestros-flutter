@@ -1,8 +1,9 @@
-import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/usuarios_detalle_page.dart';
-import 'package:app_flutter_datosmaestros/features/usuarios/presentation/widgets/list_of_usuarios.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/widgets/side_menu.dart';
 import 'package:app_flutter_datosmaestros/responsive.dart';
 import 'package:flutter/material.dart';
+
+import 'list_of_usuarios.dart';
+import 'usuarios_detalle_page.dart';
 
 class PrincipalPage extends StatelessWidget {
   @override

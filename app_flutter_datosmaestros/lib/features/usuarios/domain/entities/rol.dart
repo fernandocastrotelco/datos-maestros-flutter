@@ -1,7 +1,8 @@
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/permiso.dart';
 import 'package:equatable/equatable.dart';
 
 class Rol extends Equatable {
-  Rol(
+  const Rol(
       {this.id,
       this.sistemasId,
       this.rol,
@@ -9,7 +10,8 @@ class Rol extends Equatable {
       this.descripcion,
       this.activo,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.permisos});
   final int id;
   final int sistemasId;
   final String rol;
@@ -18,7 +20,7 @@ class Rol extends Equatable {
   final int activo;
   final String createdAt;
   final String updatedAt;
-
+  final List<Permiso> permisos;
   @override
   List<Object> get props => [
         id,
@@ -29,5 +31,6 @@ class Rol extends Equatable {
         activo,
         createdAt,
         updatedAt,
+        permisos,
       ];
 }
