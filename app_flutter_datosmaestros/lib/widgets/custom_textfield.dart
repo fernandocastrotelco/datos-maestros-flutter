@@ -6,11 +6,13 @@ class CustomTextField extends StatelessWidget {
   final bool isPass;
   final IconData icon;
   final TextInputType keyboardType;
+  final bool readOnly;
   const CustomTextField(
       {Key key,
       @required this.nameController,
       @required this.label,
       this.isPass,
+      this.readOnly = false,
       @required this.icon,
       this.keyboardType: TextInputType.text})
       : super(key: key);
@@ -30,6 +32,7 @@ class CustomTextField extends StatelessWidget {
         obscureText: isPass == true ? true : false,
         controller: nameController,
         keyboardType: keyboardType,
+        readOnly: readOnly,
         decoration: InputDecoration(
             prefixIcon: Icon(icon),
             labelText: label,

@@ -1,4 +1,5 @@
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/permisos_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/roles_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/widgets/side_menu_item.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class SideMenu extends StatelessWidget {
             ),
             SideMenuItem(
               iconSrc: Icons.security_rounded,
-              title: "Roles y Permisos",
+              title: "Roles",
               press: () {
                 context
                     .read<RolesBloc>()
@@ -57,6 +58,18 @@ class SideMenu extends StatelessWidget {
               },
               isActive:
                   ModalRoute.of(context).settings.name.startsWith('/roles'),
+            ),
+            SideMenuItem(
+              iconSrc: Icons.security_rounded,
+              title: "Permisos",
+              press: () {
+                context
+                    .read<PermisosBloc>()
+                    .add(GetPermisosPagedEvent(Pagina(numero: 1, tamanio: 5)));
+                Navigator.pushNamed(context, '/permisos');
+              },
+              isActive:
+                  ModalRoute.of(context).settings.name.startsWith('/permisos'),
             ),
           ],
         ),

@@ -14,3 +14,9 @@ const kTextColor = Color(0xFF4D5875);
 const kDefaultPadding = 20.0;
 
 const DATOSMAESTROS = '127.0.0.1:3395';
+
+enum Crud {
+  Create,
+  Update,
+  Delete,
+}

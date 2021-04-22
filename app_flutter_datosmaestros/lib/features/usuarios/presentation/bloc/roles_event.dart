@@ -5,12 +5,6 @@ abstract class RolesEvent extends Equatable {
   const RolesEvent();
 }
 
-enum Crud {
-  Create,
-  Update,
-  Delete,
-}
-
 class GetRolesEvent extends RolesEvent {
   final Pagina pagina;
 
@@ -36,6 +30,25 @@ class CrudRolEvent extends RolesEvent {
 
   @override
   List<Object> get props => [crud];
+}
+
+class DeleteRolEvent extends RolesEvent {
+  final int id;
+
+  DeleteRolEvent(this.id);
+
+  @override
+  List<Object> get props => [id];
+}
+
+class AddPermisoEvent extends RolesEvent {
+  final int rol;
+  final int permiso;
+
+  AddPermisoEvent(this.rol, this.permiso);
+
+  @override
+  List<Object> get props => [rol, permiso];
 }
 
 class SubmitRolEvent extends RolesEvent {

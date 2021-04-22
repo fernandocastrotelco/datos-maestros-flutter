@@ -13,6 +13,39 @@ class PermisosLoadingState extends PermisosState {
   List<Object> get props => [];
 }
 
+class PermisosPagedState extends PermisosState {
+  final List<Permiso> permisos;
+  final Permiso seleccionado;
+  final Pagina pagina;
+  final Crud crud;
+  static const Permiso permisoVacio = Permiso();
+  PermisosPagedState(this.permisos, this.pagina,
+      {this.seleccionado = permisoVacio, this.crud = Crud.Create});
+
+  PermisosPagedState copyWith(
+      {List<Permiso> permisos,
+      Permiso seleccionado,
+      int numero,
+      int tamanio,
+      String consulta,
+      Crud crud}) {
+    final nuevapagina = Pagina(
+      numero: numero ?? pagina.numero,
+      tamanio: tamanio ?? pagina.tamanio,
+      consulta: consulta ?? pagina.consulta,
+      total: pagina.total,
+      registros: pagina.registros,
+      data: pagina.data,
+    );
+    return PermisosPagedState(permisos ?? this.permisos, nuevapagina,
+        seleccionado: seleccionado ?? this.seleccionado,
+        crud: crud ?? this.crud);
+  }
+
+  @override
+  List<Object> get props => [permisos, seleccionado, pagina, crud];
+}
+
 class PermisosSuccessState extends PermisosState {
   final List<Permiso> permisos;
 

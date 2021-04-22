@@ -1,15 +1,12 @@
-import 'dart:ui';
-
-import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/rol.dart';
+import 'package:app_flutter_datosmaestros/constants.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/permiso.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../../constants.dart';
-
-class RolCard extends StatelessWidget {
-  const RolCard({Key key, this.isActive, this.rol, this.press})
+class PermisoCard extends StatelessWidget {
+  const PermisoCard({Key key, this.isActive, this.permiso, this.press})
       : super(key: key);
   final bool isActive;
-  final Rol rol;
+  final Permiso permiso;
   final VoidCallback press;
   @override
   Widget build(BuildContext context) {
@@ -37,7 +34,7 @@ class RolCard extends StatelessWidget {
                         Expanded(
                           child: Text.rich(
                             TextSpan(
-                              text: "${rol.id} - ${rol.rol} \n",
+                              text: "${permiso.id} - ${permiso.permiso} \n",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -45,7 +42,7 @@ class RolCard extends StatelessWidget {
                               ),
                               children: [
                                 TextSpan(
-                                  text: rol.scope,
+                                  text: permiso.scope,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText2
@@ -62,30 +59,20 @@ class RolCard extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                              rol.createdAt,
+                              permiso.createdAt,
                               style:
                                   Theme.of(context).textTheme.caption.copyWith(
                                         color: isActive ? Colors.white70 : null,
                                       ),
                             ),
                             SizedBox(height: 5),
-                            Icon(rol.activo == 1
+                            Icon(permiso.activo == 1
                                 ? Icons.check_circle_outline_outlined
                                 : Icons.cancel_outlined),
                           ],
                         )
                       ],
                     ),
-                    // SizedBox(height: kDefaultPadding / 2),
-                    // Text(
-                    //   "    Id: " + usuario.id.toString(),
-                    //   maxLines: 2,
-                    //   overflow: TextOverflow.ellipsis,
-                    //   style: Theme.of(context).textTheme.caption.copyWith(
-                    //         height: 1.5,
-                    //         color: isActive ? Colors.white70 : null,
-                    //       ),
-                    // ),
                   ],
                 ),
               ),

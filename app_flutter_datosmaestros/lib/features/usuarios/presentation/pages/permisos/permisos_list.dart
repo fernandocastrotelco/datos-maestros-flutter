@@ -1,21 +1,21 @@
+import 'package:app_flutter_datosmaestros/constants.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
-import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/roles_bloc.dart';
-import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/roles/roles_detalle_page.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/permisos_bloc.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/permisos/components/cubit/permiso_form_cubit.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/permisos/components/permiso_card.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/permisos/components/permiso_pagination.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/permisos/permisos_detalle_page.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/widgets/side_menu.dart';
 import 'package:app_flutter_datosmaestros/responsive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../constants.dart';
-import 'components/rol_card.dart';
-import 'components/roles_pagination.dart';
-
-class ListOfRoles extends StatelessWidget {
+class PermisosList extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    final _bloc = context.read<RolesBloc>();
+    final _bloc = context.read<PermisosBloc>();
     return Scaffold(
       key: _scaffoldKey,
       drawer: ConstrainedBox(
@@ -27,8 +27,12 @@ class ListOfRoles extends StatelessWidget {
         color: kBgDarkColor,
         child: SafeArea(
             right: false,
-            child:
-                BlocBuilder<RolesBloc, RolesState>(builder: (context, state) {
+            child: BlocConsumer<PermisosBloc, PermisosState>(
+                listener: (context, state) {
+              if (state is PermisosPagedState) {
+                context.read<PermisoFormCubit>().init();
+              }
+            }, builder: (context, state) {
               return Column(
                 children: [
                   Padding(
@@ -50,13 +54,13 @@ class ListOfRoles extends StatelessWidget {
                         Expanded(
                           child: TextField(
                             onChanged: (value) {
-                              if (state is RolesSuccessState) {
+                              if (state is PermisosPagedState) {
                                 Pagina pagina = Pagina(
                                   numero: state.pagina.numero,
                                   tamanio: state.pagina.tamanio,
                                   consulta: value,
                                 );
-                                _bloc.add(GetRolesEvent(pagina));
+                                _bloc.add(GetPermisosPagedEvent(pagina));
                               }
                             },
                             decoration: InputDecoration(
@@ -88,10 +92,10 @@ class ListOfRoles extends StatelessWidget {
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                    child: BlocBuilder<RolesBloc, RolesState>(
+                    child: BlocBuilder<PermisosBloc, PermisosState>(
                         builder: (context, state) {
-                      if (state is RolesSuccessState) {
-                        return RolesPagination(
+                      if (state is PermisosPagedState) {
+                        return PermisoPagination(
                           bloc: _bloc,
                           pagina: state.pagina,
                         );
@@ -118,14 +122,13 @@ class ListOfRoles extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               Text(
-                                "Rol",
+                                "Permiso",
                                 style: TextStyle(color: Colors.white),
                               )
                             ],
                           ),
                           onPressed: () {
-                            _bloc.add(CrudRolEvent(Crud.Create));
-                            Navigator.pushNamed(context, '/roles/edit');
+                            _bloc.add(CreatePermisoEvent());
                           }),
                       SizedBox(
                         width: kDefaultPadding,
@@ -133,29 +136,29 @@ class ListOfRoles extends StatelessWidget {
                     ],
                   ),
                   Expanded(
-                    child: BlocBuilder<RolesBloc, RolesState>(
+                    child: BlocBuilder<PermisosBloc, PermisosState>(
                         builder: (context, state) {
-                      if (state is RolesSuccessState) {
+                      if (state is PermisosPagedState) {
                         return ListView.builder(
-                            itemCount: state.roles.length,
-                            itemBuilder: (context, index) => RolCard(
+                            itemCount: state.permisos.length,
+                            itemBuilder: (context, index) => PermisoCard(
                                 isActive: Responsive.isMobile(context)
                                     ? false
-                                    : state.roles[index].id ==
+                                    : state.permisos[index].id ==
                                         state.seleccionado.id,
-                                rol: state.roles[index],
+                                permiso: state.permisos[index],
                                 press: () {
-                                  _bloc.add(SelectRolEvent(index));
+                                  _bloc.add(SelectPermisoEvent(index));
                                   if (!Responsive.isDesktop(context))
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              RolesDetallePage(),
+                                              PermisosDetallePage(),
                                         ));
                                 }));
                       }
-                      if (state is RolesLoadingState) {
+                      if (state is PermisosLoadingState) {
                         return Center(
                           child: CircularProgressIndicator(),
                         );

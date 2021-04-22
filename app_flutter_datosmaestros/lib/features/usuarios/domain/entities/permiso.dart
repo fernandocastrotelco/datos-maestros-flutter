@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class Permiso extends Equatable {
-  Permiso(
+  const Permiso(
       {this.id,
       this.permiso,
       this.scope,

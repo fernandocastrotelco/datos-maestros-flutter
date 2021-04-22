@@ -42,11 +42,10 @@ class RolesSuccessState extends RolesState {
 
 class RolesCrudState extends RolesState {
   final Rol rol;
-  final List<Sistema> sistemas;
 
-  RolesCrudState(this.rol, this.sistemas);
+  RolesCrudState(this.rol);
   @override
-  List<Object> get props => [rol, sistemas];
+  List<Object> get props => [rol];
 }
 
 class RolesErrorState extends RolesState {

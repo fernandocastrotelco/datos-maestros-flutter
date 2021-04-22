@@ -2,6 +2,7 @@ import 'package:app_flutter_datosmaestros/dependencies.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/permisos_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/roles_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/usuarios_bloc.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/permisos/permisos_principal_page.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/roles/roles_form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,11 +28,12 @@ class MyApp extends StatelessWidget {
               create: (context) => UsuariosBloc(context.read())
                 ..add(GetUsuariosEvent(Pagina(numero: 1, tamanio: 5)))),
           BlocProvider<RolesBloc>(
-              create: (context) => RolesBloc(context.read(), context.read())
+              create: (context) => RolesBloc(context.read(), context.read(),
+                  context.read(), context.read())
                 ..add(GetRolesEvent(Pagina(numero: 1, tamanio: 5)))),
           BlocProvider<PermisosBloc>(
-              create: (context) =>
-                  PermisosBloc(context.read())..add(GetPermisosEvent("")))
+              create: (context) => PermisosBloc(context.read(), context.read(),
+                  context.read(), context.read()))
         ],
         child: MaterialApp(
           title: 'Panel de Control',
@@ -57,6 +59,7 @@ class MyApp extends StatelessWidget {
             '/home': (BuildContext context) => PrincipalPage(),
             '/roles': (BuildContext context) => RolesPrincipalPage(),
             '/roles/edit': (BuildContext context) => RolesFormPage(),
+            '/permisos': (BuildContext context) => PermisosPrincipalPage(),
           },
           home: PrincipalPage(),
         ),

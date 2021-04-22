@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RolesDetallePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //final _bloc = context.read<RolesBloc>();
+    final _bloc = context.read<RolesBloc>();
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -47,12 +47,13 @@ class RolesDetallePage extends StatelessWidget {
                                         ),
                                       ),
                                       if (state.roles.isNotEmpty)
-                                        Text(
-                                          "${state.seleccionado.id} - ${state.seleccionado.rol}",
+                                        Text.rich(TextSpan(
+                                          text:
+                                              "${state.seleccionado.id} - ${state.seleccionado.rol}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6,
-                                        )
+                                        ))
                                     ],
                                   ),
                                 ),
@@ -93,6 +94,31 @@ class RolesDetallePage extends StatelessWidget {
                                                 style: ElevatedButton.styleFrom(
                                                     primary: kPrimaryColor),
                                                 child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.edit_rounded,
+                                                      color: Colors.white,
+                                                    ),
+                                                    Text(
+                                                      "Editar",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    )
+                                                  ],
+                                                ),
+                                                onPressed: () {
+                                                  _bloc.add(CrudRolEvent(
+                                                      Crud.Update));
+                                                  Navigator.pushNamed(
+                                                      context, '/roles/edit');
+                                                }),
+                                            SizedBox(
+                                              width: kDefaultPadding,
+                                            ),
+                                            ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: kPrimaryColor),
+                                                child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
@@ -108,8 +134,46 @@ class RolesDetallePage extends StatelessWidget {
                                                     )
                                                   ],
                                                 ),
-                                                onPressed: () =>
-                                                    _showMyDialog(context)),
+                                                onPressed: () {
+                                                  context
+                                                      .read<PermisosBloc>()
+                                                      .add(GetPermisosEvent(
+                                                          state.seleccionado
+                                                              .id));
+                                                  _showMyDialog(context,
+                                                      rol: state
+                                                          .seleccionado.id);
+                                                }),
+                                            SizedBox(
+                                              width: kDefaultPadding * 3,
+                                            ),
+                                            ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: kBadgeColor),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.add,
+                                                      color: Colors.white,
+                                                    ),
+                                                    Text(
+                                                      "Eliminar",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    )
+                                                  ],
+                                                ),
+                                                onPressed: () {
+                                                  _showDeleteDialog(context,
+                                                      id: state.seleccionado.id,
+                                                      rol: state
+                                                          .seleccionado.rol,
+                                                      scope: state
+                                                          .seleccionado.scope);
+                                                }),
                                           ],
                                         ),
                                         SizedBox(height: kDefaultPadding),
@@ -168,8 +232,61 @@ class RolesDetallePage extends StatelessWidget {
     );
   }
 
-  Future<void> _showMyDialog(BuildContext context) async {
+  Future<void> _showDeleteDialog(BuildContext context,
+      {int id, String rol, String scope}) async {
+    final _width = context.size.width;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Desea eliminar el rol:'),
+          content: SingleChildScrollView(
+            child: Container(
+              width: _width / 1.5,
+              child: ListBody(
+                children: <Widget>[
+                  Text('$rol - $scope'),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Aceptar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kPrimaryColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
+              onPressed: () {
+                context.read<RolesBloc>().add(DeleteRolEvent(id));
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kBadgeColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showMyDialog(BuildContext context, {int rol}) async {
     //context.read<PermisosBloc>().add(GetPermisosEvent(""));
+    final _width = context.size.width;
+    int idPermiso;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -177,36 +294,60 @@ class RolesDetallePage extends StatelessWidget {
         return AlertDialog(
           title: Text('Permisos'),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Seleccione el permiso que desea agregar.'),
-                BlocBuilder<PermisosBloc, PermisosState>(
-                    builder: (context, state) {
-                  if (state is PermisosSuccessState) {
-                    return DropdownSearch<Permiso>(
-                      label: "Permisos",
-                      mode: Mode.MENU,
-                      items: state.permisos,
-                      itemAsString: (permiso) =>
-                          "${permiso.permiso} - ${permiso.scope}",
-                      showSearchBox: true,
-                      onFind: (String filtro) =>
-                          _getPermisos(filtro, state.permisos, context),
-                      onChanged: (permiso) {
-                        print(permiso.scope);
-                      },
+            child: Container(
+              width: _width / 1.5,
+              child: ListBody(
+                children: <Widget>[
+                  Text('Seleccione el permiso que desea agregar.'),
+                  BlocBuilder<PermisosBloc, PermisosState>(
+                      builder: (context, state) {
+                    if (state is PermisosSuccessState) {
+                      return DropdownSearch<Permiso>(
+                        label: "Permisos",
+                        mode: Mode.MENU,
+                        maxHeight: _width / 2,
+                        //items: state.permisos,
+                        itemAsString: (permiso) =>
+                            "${permiso.permiso} - ${permiso.scope}",
+                        showSearchBox: true,
+                        onFind: (String filtro) =>
+                            _getPermisos(filtro, state.permisos, context),
+                        onChanged: (permiso) {
+                          print(permiso.scope);
+                          idPermiso = permiso.id;
+                        },
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
                     );
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }),
-              ],
+                  }),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Aceptar'),
+              child: Text(
+                'Aceptar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kPrimaryColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
+              onPressed: () {
+                context.read<RolesBloc>().add(AddPermisoEvent(rol, idPermiso));
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kBadgeColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

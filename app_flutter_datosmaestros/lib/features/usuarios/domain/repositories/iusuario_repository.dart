@@ -10,5 +10,11 @@ abstract class IUsuarioRepository {
   Future<Either<IFailure, Pagina<List<Usuario>>>> getUsuarios(Pagina pagina);
   Future<Either<IFailure, Pagina<List<Rol>>>> getRoles(Pagina pagina);
   Future<Either<IFailure, List<Sistema>>> getSistemas();
-  Future<Either<IFailure, List<Permiso>>> getPermisos(String consulta);
+  Future<Either<IFailure, List<Permiso>>> getPermisos(int rolId);
+  Future<Either<IFailure, Rol>> postRol(Rol rol);
+  Future<Either<IFailure, bool>> deleteRol(int id);
+  Future<Either<IFailure, bool>> addPermiso(int idRol, int idPermiso);
+  Future<Either<IFailure, Pagina<List<Permiso>>>> getPermisoPage(Pagina pagina);
+  Future<Either<IFailure, Permiso>> postPermiso(Permiso permiso);
+  Future<Either<IFailure, bool>> deletePermiso(int id);
 }

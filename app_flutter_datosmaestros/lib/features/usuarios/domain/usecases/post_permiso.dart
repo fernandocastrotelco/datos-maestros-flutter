@@ -4,13 +4,13 @@ import 'package:app_flutter_datosmaestros/utils/ifailures.dart';
 import 'package:app_flutter_datosmaestros/utils/iusecase.dart';
 import 'package:dartz/dartz.dart';
 
-class GetPermisos implements IUseCase<List<Permiso>, int> {
+class PostPermiso implements IUseCase<Permiso, Permiso> {
   final IUsuarioRepository repository;
 
-  GetPermisos(this.repository);
+  PostPermiso(this.repository);
 
   @override
-  Future<Either<IFailure, List<Permiso>>> call(int params) async {
-    return await repository.getPermisos(params);
+  Future<Either<IFailure, Permiso>> call(Permiso params) async {
+    return await repository.postPermiso(params);
   }
 }
