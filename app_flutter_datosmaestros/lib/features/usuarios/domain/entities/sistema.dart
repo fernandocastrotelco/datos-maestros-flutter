@@ -2,7 +2,7 @@ import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/rol.
 import 'package:equatable/equatable.dart';
 
 class Sistema extends Equatable {
-  Sistema({
+  const Sistema({
     this.id,
     this.sistema,
     this.activo,

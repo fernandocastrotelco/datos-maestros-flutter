@@ -1,9 +1,12 @@
 import 'package:app_flutter_datosmaestros/dependencies.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/permisos_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/roles_bloc.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/sistemas_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/usuarios_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/permisos/permisos_principal_page.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/roles/roles_form_page.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/sistemas/sistemas_form_page.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/sistemas/sistemas_principal_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +36,10 @@ class MyApp extends StatelessWidget {
                 ..add(GetRolesEvent(Pagina(numero: 1, tamanio: 5)))),
           BlocProvider<PermisosBloc>(
               create: (context) => PermisosBloc(context.read(), context.read(),
-                  context.read(), context.read()))
+                  context.read(), context.read())),
+          BlocProvider<SistemasBloc>(
+              create: (context) =>
+                  SistemasBloc(context.read(), context.read(), context.read())),
         ],
         child: MaterialApp(
           title: 'Panel de Control',
@@ -57,6 +63,8 @@ class MyApp extends StatelessWidget {
           initialRoute: '/home',
           routes: {
             '/home': (BuildContext context) => PrincipalPage(),
+            '/sistemas': (BuildContext context) => SistemasPrincipalPage(),
+            '/sistemas/edit': (BuildContext context) => SistemasFormPage(),
             '/roles': (BuildContext context) => RolesPrincipalPage(),
             '/roles/edit': (BuildContext context) => RolesFormPage(),
             '/permisos': (BuildContext context) => PermisosPrincipalPage(),

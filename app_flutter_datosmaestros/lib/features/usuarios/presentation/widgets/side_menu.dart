@@ -1,6 +1,7 @@
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/permisos_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/roles_bloc.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/sistemas_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/widgets/side_menu_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,8 +45,14 @@ class SideMenu extends StatelessWidget {
             SideMenuItem(
               iconSrc: Icons.personal_video_rounded,
               title: "Sistemas",
-              press: () {},
-              isActive: false,
+              press: () {
+                context
+                    .read<SistemasBloc>()
+                    .add(GetSistemasEvent(Pagina(numero: 1, tamanio: 5)));
+                Navigator.pushNamed(context, '/sistemas');
+              },
+              isActive:
+                  ModalRoute.of(context).settings.name.startsWith('/sistemas'),
             ),
             SideMenuItem(
               iconSrc: Icons.security_rounded,
