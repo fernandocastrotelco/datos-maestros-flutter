@@ -6,6 +6,7 @@ import 'package:app_flutter_datosmaestros/features/usuarios/domain/repositories/
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/repositories/iusuario_repository.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_permiso.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_rol.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_usuario_rol.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/delete_permiso.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/delete_rol.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_permisos.dart';
@@ -74,6 +75,9 @@ List<RepositoryProvider> buildRepositories() {
     ),
     RepositoryProvider<AddRol>(
       create: (context) => AddRol(context.read()),
+    ),
+    RepositoryProvider<AddUsuarioRol>(
+      create: (context) => AddUsuarioRol(context.read()),
     ),
   ];
 }

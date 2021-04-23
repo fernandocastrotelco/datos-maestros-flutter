@@ -9,6 +9,7 @@ abstract class ISistemaRemoteDataSource {
   Future<Pagina<List<Sistema>>> getSistemasPage(Pagina params);
   Future<Sistema> postSistema(Sistema sistema);
   Future<bool> putRolToSistema(int idSistema, int idRol);
+  Future<bool> putRolToUsuario(int idUsuario, int idRol);
 }
 
 class SistemaRemoteDataSource implements ISistemaRemoteDataSource {
@@ -93,6 +94,29 @@ class SistemaRemoteDataSource implements ISistemaRemoteDataSource {
       };
 
       final url = Uri.http(DATOSMAESTROS, '/usuarios/roles', paramsApi);
+
+      final response = await client.request(url: url, method: 'put');
+
+      if (response['status']) {
+        result = true;
+      } else {
+        throw ServerFailure(message: response['message'].toString());
+      }
+      return result;
+    } catch (e) {
+      if (e is ServerFailure) {
+        throw e;
+      } else {
+        throw ServerFailure(message: "error inesperado");
+      }
+    }
+  }
+
+  @override
+  Future<bool> putRolToUsuario(int idUsuario, int idRol) async {
+    bool result;
+    try {
+      final url = Uri.http(DATOSMAESTROS, '/usuarios/$idUsuario/rol/$idRol');
 
       final response = await client.request(url: url, method: 'put');
 

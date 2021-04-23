@@ -21,3 +21,13 @@ class SelectUsuarioEvent extends UsuariosEvent {
   @override
   List<Object> get props => [index];
 }
+
+class AddUsuarioRolEvent extends UsuariosEvent {
+  final int usuario;
+  final int rol;
+
+  AddUsuarioRolEvent(this.usuario, this.rol);
+
+  @override
+  List<Object> get props => [usuario, rol];
+}

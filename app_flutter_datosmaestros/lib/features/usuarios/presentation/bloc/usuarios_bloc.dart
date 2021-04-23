@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/usuario.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_usuario_rol.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_usuarios.dart';
 import 'package:app_flutter_datosmaestros/utils/ifailures.dart';
 import 'package:bloc/bloc.dart';
@@ -10,9 +11,11 @@ part 'usuarios_state.dart';
 
 class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
   final GetUsuarios _getUsuarios;
-  UsuariosBloc(GetUsuarios getUsuarios)
+  final AddUsuarioRol _addUsuarioRol;
+  UsuariosBloc(GetUsuarios getUsuarios, AddUsuarioRol addUsuarioRol)
       : assert(GetUsuarios != null),
         _getUsuarios = getUsuarios,
+        _addUsuarioRol = addUsuarioRol,
         super(UsuariosInitial());
   @override
   Stream<UsuariosState> mapEventToState(
@@ -23,6 +26,9 @@ class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
     }
     if (event is SelectUsuarioEvent) {
       yield* _mapSelectUsuarioEvent(event);
+    }
+    if (event is AddUsuarioRolEvent) {
+      yield* _mapAddUsuarioRolEvent(event);
     }
   }
 
@@ -59,6 +65,31 @@ class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
       );
     } else {
       yield UsuariosErrorState("Error al obtener usuario seleccionado");
+    }
+  }
+
+  Stream<UsuariosState> _mapAddUsuarioRolEvent(
+      AddUsuarioRolEvent event) async* {
+    final currentState = state as UsuariosSuccessState;
+    yield UsuariosLoadingState();
+    final response =
+        await _addUsuarioRol({'usuario': event.usuario, 'rol': event.rol});
+    if (response.isLeft()) {
+      var errorState;
+      response.leftMap((l) => errorState =
+          UsuariosErrorState(l is ServerFailure ? l.message : "Error"));
+      yield errorState;
+    } else {
+      final response2 = await _getUsuarios(currentState.pagina);
+      yield response2.fold(
+          (failure) => UsuariosErrorState(
+              failure is ServerFailure ? failure.message : "Error"),
+          (usuarios) {
+        final usuario = usuarios.data
+            .firstWhere((e) => e.id == currentState.seleccionado.id);
+        return UsuariosSuccessState(usuarios.data, currentState.pagina,
+            seleccionado: usuario);
+      });
     }
   }
 }

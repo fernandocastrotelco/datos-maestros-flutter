@@ -51,4 +51,18 @@ class SistemaRepository implements ISistemaRepository {
       }
     }
   }
+
+  @override
+  Future<Either<IFailure, bool>> addUsuarioRol(int idUsuario, int idRol) async {
+    try {
+      final result = await remoteDatasource.putRolToUsuario(idUsuario, idRol);
+      return Right(result);
+    } catch (e) {
+      if (e is ServerFailure) {
+        return Left(e);
+      } else {
+        return Left(ServerFailure(message: "No se pudo agregar el rol"));
+      }
+    }
+  }
 }

@@ -1,4 +1,10 @@
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/rol.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/sistema.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/usuarios_bloc.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/usuarios/cubit/usuario_sistema_cubit.dart';
+import 'package:app_flutter_datosmaestros/widgets/custom_button.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +23,25 @@ class UsuariosDetallePage extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<UsuariosBloc, UsuariosState>(
                     builder: (context, state) {
+                  if (state is UsuariosErrorState) {
+                    Center(
+                      child: Card(
+                        child: Column(
+                          children: [
+                            Text(state.mensaje),
+                            CustomButton(
+                              text: "Volver",
+                              onPressed: () {
+                                context.read<UsuariosBloc>().add(
+                                    GetUsuariosEvent(
+                                        Pagina(numero: 1, tamanio: 5)));
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                   if (state is UsuariosSuccessState) {
                     return SingleChildScrollView(
                       padding: EdgeInsets.all(kDefaultPadding),
@@ -117,7 +142,16 @@ class UsuariosDetallePage extends StatelessWidget {
                                                             )
                                                           ],
                                                         ),
-                                                        onPressed: () {}),
+                                                        onPressed: () {
+                                                          context
+                                                              .read<
+                                                                  UsuarioSistemaCubit>()
+                                                              .init();
+                                                          _showMyDialog(
+                                                              context,
+                                                              state.seleccionado
+                                                                  .id);
+                                                        }),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -182,5 +216,115 @@ class UsuariosDetallePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _showMyDialog(BuildContext context, int idUsuario) async {
+    //context.read<PermisosBloc>().add(GetPermisosEvent(""));
+    int idRol;
+    final _width = context.size.width;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sistemas y Roles'),
+          content: SingleChildScrollView(
+            child: Container(
+              width: _width / 1.5,
+              child: ListBody(
+                children: <Widget>[
+                  Text('Seleccione el sistema al que desea dar acceso.'),
+                  BlocBuilder<UsuarioSistemaCubit, UsuarioSistemaState>(
+                      builder: (context, state) {
+                    if (state is UsuarioSistemaState) {
+                      return Column(
+                        children: [
+                          DropdownSearch<Sistema>(
+                            label: "Sistemas",
+                            mode: Mode.MENU,
+                            maxHeight: _width / 2,
+                            selectedItem: state.sistema,
+                            itemAsString: (sistema) =>
+                                "${sistema.id} - ${sistema.sistema}",
+                            showSearchBox: true,
+                            onFind: (String filtro) =>
+                                _getSistemas(filtro, state.lovSistemas),
+                            onChanged: (sistema) {
+                              context
+                                  .read<UsuarioSistemaCubit>()
+                                  .sistemaChanged(sistema);
+                            },
+                          ),
+                          SizedBox(
+                            height: kDefaultPadding,
+                          ),
+                          DropdownSearch<Rol>(
+                            label: "Roles",
+                            mode: Mode.MENU,
+                            maxHeight: _width / 2,
+                            selectedItem: state.rol,
+                            itemAsString: (rol) => "${rol.rol} - ${rol.scope}",
+                            showSearchBox: true,
+                            onFind: (String filtro) =>
+                                _getRoles(filtro, state.lovRoles),
+                            onChanged: (rol) {
+                              context
+                                  .read<UsuarioSistemaCubit>()
+                                  .rolChanged(rol);
+                              idRol = rol.id;
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Aceptar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kPrimaryColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
+              onPressed: () {
+                context
+                    .read<UsuariosBloc>()
+                    .add(AddUsuarioRolEvent(idUsuario, idRol));
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kBadgeColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<List<Sistema>> _getSistemas(
+      String filtro, List<Sistema> sistemas) async {
+    return sistemas;
+  }
+
+  Future<List<Rol>> _getRoles(String filtro, List<Rol> roles) async {
+    return roles;
   }
 }
