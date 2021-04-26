@@ -29,8 +29,9 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<UsuariosBloc>(
-              create: (context) => UsuariosBloc(context.read(), context.read())
-                ..add(GetUsuariosEvent(Pagina(numero: 1, tamanio: 5)))),
+              create: (context) =>
+                  UsuariosBloc(context.read(), context.read(), context.read())
+                    ..add(GetUsuariosEvent(Pagina(numero: 1, tamanio: 5)))),
           BlocProvider<UsuarioSistemaCubit>(
             create: (context) => UsuarioSistemaCubit(context.read())..init(),
           ),

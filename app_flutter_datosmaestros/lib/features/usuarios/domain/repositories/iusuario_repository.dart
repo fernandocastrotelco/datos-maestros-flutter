@@ -17,4 +17,5 @@ abstract class IUsuarioRepository {
   Future<Either<IFailure, Pagina<List<Permiso>>>> getPermisoPage(Pagina pagina);
   Future<Either<IFailure, Permiso>> postPermiso(Permiso permiso);
   Future<Either<IFailure, bool>> deletePermiso(int id);
+  Future<Either<IFailure, bool>> deleteRolUsuario(int idUsuario, int idRol);
 }

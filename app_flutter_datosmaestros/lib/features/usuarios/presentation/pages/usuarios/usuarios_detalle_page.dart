@@ -13,6 +13,7 @@ import '../../../../../constants.dart';
 class UsuariosDetallePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _bloc = context.read<UsuariosBloc>();
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -32,9 +33,8 @@ class UsuariosDetallePage extends StatelessWidget {
                             CustomButton(
                               text: "Volver",
                               onPressed: () {
-                                context.read<UsuariosBloc>().add(
-                                    GetUsuariosEvent(
-                                        Pagina(numero: 1, tamanio: 5)));
+                                _bloc.add(GetUsuariosEvent(
+                                    Pagina(numero: 1, tamanio: 5)));
                               },
                             )
                           ],
@@ -186,7 +186,20 @@ class UsuariosDetallePage extends StatelessWidget {
                                                       DataCell(Row(
                                                         children: [
                                                           Icon(Icons.edit),
-                                                          Icon(Icons.delete)
+                                                          IconButton(
+                                                              icon: Icon(
+                                                                  Icons.delete),
+                                                              onPressed: () {
+                                                                _showDeleteDialog(
+                                                                    context,
+                                                                    state
+                                                                        .seleccionado
+                                                                        .id,
+                                                                    rol.id,
+                                                                    rol.rol +
+                                                                        " - " +
+                                                                        rol.scope);
+                                                              }),
                                                         ],
                                                       ))
                                                     ]);
@@ -219,7 +232,6 @@ class UsuariosDetallePage extends StatelessWidget {
   }
 
   Future<void> _showMyDialog(BuildContext context, int idUsuario) async {
-    //context.read<PermisosBloc>().add(GetPermisosEvent(""));
     int idRol;
     final _width = context.size.width;
     return showDialog<void>(
@@ -298,6 +310,62 @@ class UsuariosDetallePage extends StatelessWidget {
                 context
                     .read<UsuariosBloc>()
                     .add(AddUsuarioRolEvent(idUsuario, idRol));
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kBadgeColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showDeleteDialog(BuildContext context, int idUsuario, int idRol,
+      String descripcion) async {
+    final _width = context.size.width;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Está seguro de eliminar el rol:'),
+          content: SingleChildScrollView(
+            child: Container(
+              width: _width / 1.5,
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                    descripcion,
+                    style: Theme.of(context).textTheme.headline6,
+                  )
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Aceptar',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: kPrimaryColor,
+                  padding: EdgeInsets.all(kDefaultPadding)),
+              onPressed: () {
+                context
+                    .read<UsuariosBloc>()
+                    .add(DeleteUsuarioRolEvent(idUsuario, idRol));
                 Navigator.of(context).pop();
               },
             ),

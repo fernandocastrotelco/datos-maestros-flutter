@@ -31,3 +31,13 @@ class AddUsuarioRolEvent extends UsuariosEvent {
   @override
   List<Object> get props => [usuario, rol];
 }
+
+class DeleteUsuarioRolEvent extends UsuariosEvent {
+  final int usuario;
+  final int rol;
+
+  DeleteUsuarioRolEvent(this.usuario, this.rol);
+
+  @override
+  List<Object> get props => [usuario, rol];
+}

@@ -22,6 +22,7 @@ abstract class ILoginRemoteDataSource {
   Future<Pagina<List<Permiso>>> getPermisosPage(Pagina params);
   Future<Permiso> postPermiso(Permiso permiso);
   Future<bool> deletePermiso(int id);
+  Future<bool> quitarRolUsuario(int idUsuario, int idRol);
 }
 
 class LoginRemoteDataSource implements ILoginRemoteDataSource {
@@ -315,6 +316,29 @@ class LoginRemoteDataSource implements ILoginRemoteDataSource {
       final url = Uri.http(DATOSMAESTROS, '/usuarios/permisos', paramsApi);
 
       final response = await client.request(url: url, method: 'delete');
+      if (response['status']) {
+        result = true;
+      } else {
+        throw ServerFailure(message: response['message'].toString());
+      }
+      return result;
+    } catch (e) {
+      if (e is ServerFailure) {
+        throw e;
+      } else {
+        throw ServerFailure(message: "error inesperado");
+      }
+    }
+  }
+
+  @override
+  Future<bool> quitarRolUsuario(int idUsuario, int idRol) async {
+    bool result;
+    try {
+      final url = Uri.http(DATOSMAESTROS, '/usuarios/$idUsuario/rol/$idRol');
+
+      final response = await client.request(url: url, method: 'delete');
+
       if (response['status']) {
         result = true;
       } else {

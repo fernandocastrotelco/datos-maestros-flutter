@@ -79,9 +79,12 @@ class RolForm extends StatelessWidget {
                               .toList(),
                           label: "Sistema",
                           hint: "Sistema al que pertenece el rol",
-                          selectedItem: cubitState.sistemas
-                              .firstWhere((s) => s.id == cubitState.sistemaId)
-                              .sistema,
+                          selectedItem: cubitState.sistemaId != null
+                              ? cubitState.sistemas
+                                  .firstWhere(
+                                      (s) => s.id == cubitState.sistemaId)
+                                  .sistema
+                              : "",
                           onChanged: (i) {
                             final ind = cubitState.sistemas.indexWhere(
                                 (element) => element.sistema.startsWith(i));
