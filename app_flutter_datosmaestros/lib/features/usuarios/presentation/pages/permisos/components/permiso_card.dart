@@ -58,13 +58,6 @@ class PermisoCard extends StatelessWidget {
                         ),
                         Column(
                           children: [
-                            Text(
-                              permiso.createdAt,
-                              style:
-                                  Theme.of(context).textTheme.caption.copyWith(
-                                        color: isActive ? Colors.white70 : null,
-                                      ),
-                            ),
                             SizedBox(height: 5),
                             Icon(permiso.activo == 1
                                 ? Icons.check_circle_outline_outlined

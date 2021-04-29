@@ -23,6 +23,7 @@ abstract class ILoginRemoteDataSource {
   Future<Permiso> postPermiso(Permiso permiso);
   Future<bool> deletePermiso(int id);
   Future<bool> quitarRolUsuario(int idUsuario, int idRol);
+  Future<Usuario> crearUsuario(UsuarioModel usuario);
 }
 
 class LoginRemoteDataSource implements ILoginRemoteDataSource {
@@ -350,6 +351,28 @@ class LoginRemoteDataSource implements ILoginRemoteDataSource {
         throw e;
       } else {
         throw ServerFailure(message: "error inesperado");
+      }
+    }
+  }
+
+  @override
+  Future<Usuario> crearUsuario(UsuarioModel usuario) async {
+    try {
+      final url = Uri.http(DATOSMAESTROS, '/usuarios');
+
+      final response =
+          await client.request(url: url, method: 'post', body: usuario.toMap());
+
+      if (response['status']) {
+        return UsuarioModel.fromMap(response['data']);
+      } else {
+        throw ServerFailure(message: response['message'].toString());
+      }
+    } catch (e) {
+      if (e is ServerFailure) {
+        throw e;
+      } else {
+        throw ServerFailure(message: "error inesperado al crear usuario");
       }
     }
   }

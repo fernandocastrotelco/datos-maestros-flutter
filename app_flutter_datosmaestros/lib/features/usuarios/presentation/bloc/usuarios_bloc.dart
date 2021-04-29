@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:app_flutter_datosmaestros/features/usuarios/data/models/usuario_model.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/usuario.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_usuario_rol.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/create_usuario.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/delete_usuario_rol.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_usuarios.dart';
 import 'package:app_flutter_datosmaestros/utils/ifailures.dart';
@@ -14,12 +16,14 @@ class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
   final GetUsuarios _getUsuarios;
   final AddUsuarioRol _addUsuarioRol;
   final DeleteUsuarioRol _deleteUsuarioRol;
+  final CreateUsuario _createUsuario;
   UsuariosBloc(GetUsuarios getUsuarios, AddUsuarioRol addUsuarioRol,
-      DeleteUsuarioRol deleteUsuarioRol)
+      DeleteUsuarioRol deleteUsuarioRol, CreateUsuario createUsuario)
       : assert(GetUsuarios != null),
         _getUsuarios = getUsuarios,
         _addUsuarioRol = addUsuarioRol,
         _deleteUsuarioRol = deleteUsuarioRol,
+        _createUsuario = createUsuario,
         super(UsuariosInitial());
   @override
   Stream<UsuariosState> mapEventToState(
@@ -36,6 +40,9 @@ class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
     }
     if (event is DeleteUsuarioRolEvent) {
       yield* _mapDeleteUsuarioRolEvent(event);
+    }
+    if (event is CreateUsuarioEvent) {
+      yield* _mapCreateUsuarioEvent(event);
     }
   }
 
@@ -106,6 +113,30 @@ class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
     yield UsuariosLoadingState();
     final response =
         await _deleteUsuarioRol({'usuario': event.usuario, 'rol': event.rol});
+    if (response.isLeft()) {
+      var errorState;
+      response.leftMap((l) => errorState =
+          UsuariosErrorState(l is ServerFailure ? l.message : "Error"));
+      yield errorState;
+    } else {
+      final response2 = await _getUsuarios(currentState.pagina);
+      yield response2.fold(
+          (failure) => UsuariosErrorState(
+              failure is ServerFailure ? failure.message : "Error"),
+          (usuarios) {
+        final usuario = usuarios.data
+            .firstWhere((e) => e.id == currentState.seleccionado.id);
+        return UsuariosSuccessState(usuarios.data, currentState.pagina,
+            seleccionado: usuario);
+      });
+    }
+  }
+
+  Stream<UsuariosState> _mapCreateUsuarioEvent(
+      CreateUsuarioEvent event) async* {
+    final currentState = state as UsuariosSuccessState;
+    yield UsuariosLoadingState();
+    final response = await _createUsuario(event.usuario);
     if (response.isLeft()) {
       var errorState;
       response.leftMap((l) => errorState =

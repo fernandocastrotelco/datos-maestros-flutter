@@ -1,17 +1,24 @@
 import 'package:app_flutter_datosmaestros/features/usuarios/data/datasources/login_remote_datasource.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/data/datasources/sistema_remote_datasource.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/data/datasources/persona_remote_datasource.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/data/repositories/persona_repository.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/data/repositories/sistema_repository.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/data/repositories/usuario_repository.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/repositories/ipersona_repository.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/repositories/isistema_repository.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/repositories/iusuario_repository.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_permiso.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_rol.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/add_usuario_rol.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/create_usuario.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/delete_permiso.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/delete_rol.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/delete_usuario_rol.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_localidades.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_permisos.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_permisos_page.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_persona.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_provincias.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_roles.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_sistemas.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/usecases/get_sistemas_page.dart';
@@ -34,12 +41,18 @@ List<RepositoryProvider> buildRepositories() {
     RepositoryProvider<ISistemaRemoteDataSource>(
       create: (_) => SistemaRemoteDataSource(client),
     ),
+    RepositoryProvider<IPersonaRemoteDatasource>(
+      create: (_) => PersonaRemoteDatasource(client),
+    ),
 
     //Repositories
     RepositoryProvider<IUsuarioRepository>(
         create: (context) => UsuarioRepository(context.read())),
     RepositoryProvider<ISistemaRepository>(
       create: (context) => SistemaRepository(context.read()),
+    ),
+    RepositoryProvider<IPersonaRepository>(
+      create: (context) => PersonaRepository(context.read()),
     ),
 
     //Use Cases
@@ -82,6 +95,18 @@ List<RepositoryProvider> buildRepositories() {
     ),
     RepositoryProvider<DeleteUsuarioRol>(
       create: (context) => DeleteUsuarioRol(context.read()),
+    ),
+    RepositoryProvider<GetProvincias>(
+      create: (context) => GetProvincias(context.read()),
+    ),
+    RepositoryProvider<GetLocalidades>(
+      create: (context) => GetLocalidades(context.read()),
+    ),
+    RepositoryProvider<GetPersona>(
+      create: (context) => GetPersona(context.read()),
+    ),
+    RepositoryProvider<CreateUsuario>(
+      create: (context) => CreateUsuario(context.read()),
     ),
   ];
 }

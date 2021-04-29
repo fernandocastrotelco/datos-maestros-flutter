@@ -1,6 +1,7 @@
 import 'package:app_flutter_datosmaestros/constants.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/usuarios_bloc.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/usuarios/cubit/usuario_nuevo_cubit.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/widgets/side_menu.dart';
 import 'package:app_flutter_datosmaestros/responsive.dart';
 import 'package:flutter/foundation.dart';
@@ -100,6 +101,34 @@ class ListOfUsuarios extends StatelessWidget {
                     ),
                     SizedBox(
                       height: kDefaultPadding,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: kPrimaryColor),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  "Usuario",
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              ],
+                            ),
+                            onPressed: () {
+                              context.read<UsuarioNuevoCubit>().init();
+                              Navigator.pushNamed(context, '/usuarios/nuevo');
+                            }),
+                        SizedBox(
+                          width: kDefaultPadding,
+                        )
+                      ],
                     ),
                     Expanded(
                       child: BlocBuilder<UsuariosBloc, UsuariosState>(

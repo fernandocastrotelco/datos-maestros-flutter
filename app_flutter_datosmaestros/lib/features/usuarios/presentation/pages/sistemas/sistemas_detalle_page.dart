@@ -173,9 +173,20 @@ class SistemasDetallePage extends StatelessWidget {
                                               DataCell(Row(
                                                 children: [
                                                   IconButton(
-                                                      icon: Icon(Icons.edit),
-                                                      onPressed: () {}),
-                                                  Icon(Icons.delete)
+                                                    icon: Icon(Icons.edit),
+                                                    onPressed: () {
+                                                      context
+                                                          .read<RolesBloc>()
+                                                          .add(GetRolesEvent(
+                                                              Pagina(
+                                                                  numero: 1,
+                                                                  tamanio: 5,
+                                                                  consulta: rol
+                                                                      .rol)));
+                                                      Navigator.pushNamed(
+                                                          context, '/roles');
+                                                    },
+                                                  ),
                                                 ],
                                               ))
                                             ]);

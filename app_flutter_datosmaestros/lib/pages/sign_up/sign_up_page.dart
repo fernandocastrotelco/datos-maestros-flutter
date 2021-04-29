@@ -21,6 +21,10 @@ class _SignUpPageState extends State<SignUpPage> {
         children: [
           Container(
             color: Colors.blueAccent,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                        "https://telco.com.ar/images/recursos/back_header.jpg"))),
           ),
           _titleAvailable
               ? SizedBox()

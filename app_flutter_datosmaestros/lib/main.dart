@@ -7,7 +7,9 @@ import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/p
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/roles/roles_form_page.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/sistemas/sistemas_form_page.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/sistemas/sistemas_principal_page.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/usuarios/cubit/usuario_nuevo_cubit.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/usuarios/cubit/usuario_sistema_cubit.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/usuarios/usuario_nuevo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,9 +31,12 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<UsuariosBloc>(
-              create: (context) =>
-                  UsuariosBloc(context.read(), context.read(), context.read())
-                    ..add(GetUsuariosEvent(Pagina(numero: 1, tamanio: 5)))),
+              create: (context) => UsuariosBloc(context.read(), context.read(),
+                  context.read(), context.read())
+                ..add(GetUsuariosEvent(Pagina(numero: 1, tamanio: 5)))),
+          BlocProvider<UsuarioNuevoCubit>(
+              create: (context) => UsuarioNuevoCubit(
+                  context.read(), context.read(), context.read())),
           BlocProvider<UsuarioSistemaCubit>(
             create: (context) => UsuarioSistemaCubit(context.read())..init(),
           ),
@@ -68,6 +73,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/home',
           routes: {
             '/home': (BuildContext context) => PrincipalPage(),
+            '/usuarios/nuevo': (BuildContext context) => UsuarioNuevoPage(),
             '/sistemas': (BuildContext context) => SistemasPrincipalPage(),
             '/sistemas/edit': (BuildContext context) => SistemasFormPage(),
             '/roles': (BuildContext context) => RolesPrincipalPage(),

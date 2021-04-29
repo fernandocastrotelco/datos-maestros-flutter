@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
   final IconData icon;
   final TextInputType keyboardType;
   final bool readOnly;
+  final String error;
   const CustomTextField(
       {Key key,
       @required this.nameController,
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
       this.isPass,
       this.readOnly = false,
       @required this.icon,
+      this.error,
       this.keyboardType: TextInputType.text})
       : super(key: key);
 
@@ -39,6 +41,7 @@ class CustomTextField extends StatelessWidget {
             fillColor: Colors.white,
             filled: true,
             border: OutlineInputBorder(),
+            errorText: error,
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
                 borderSide: BorderSide(width: 0.2, color: Colors.grey)),

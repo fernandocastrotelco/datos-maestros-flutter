@@ -1,3 +1,4 @@
+import 'package:app_flutter_datosmaestros/features/usuarios/data/models/usuario_model.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/permiso.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/rol.dart';
@@ -18,4 +19,5 @@ abstract class IUsuarioRepository {
   Future<Either<IFailure, Permiso>> postPermiso(Permiso permiso);
   Future<Either<IFailure, bool>> deletePermiso(int id);
   Future<Either<IFailure, bool>> deleteRolUsuario(int idUsuario, int idRol);
+  Future<Either<IFailure, Usuario>> createUsuario(UsuarioModel usuario);
 }

@@ -1,6 +1,7 @@
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/rol.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/sistema.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/roles_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/usuarios_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/pages/usuarios/cubit/usuario_sistema_cubit.dart';
 import 'package:app_flutter_datosmaestros/widgets/custom_button.dart';
@@ -185,7 +186,25 @@ class UsuariosDetallePage extends StatelessWidget {
                                                               .remove_circle_outline_rounded)),
                                                       DataCell(Row(
                                                         children: [
-                                                          Icon(Icons.edit),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                                Icons.edit),
+                                                            onPressed: () {
+                                                              context
+                                                                  .read<
+                                                                      RolesBloc>()
+                                                                  .add(GetRolesEvent(Pagina(
+                                                                      numero: 1,
+                                                                      tamanio:
+                                                                          5,
+                                                                      consulta:
+                                                                          rol.rol)));
+                                                              Navigator
+                                                                  .pushNamed(
+                                                                      context,
+                                                                      '/roles');
+                                                            },
+                                                          ),
                                                           IconButton(
                                                               icon: Icon(
                                                                   Icons.delete),

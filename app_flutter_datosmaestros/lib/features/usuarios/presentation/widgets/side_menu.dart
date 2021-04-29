@@ -40,7 +40,8 @@ class SideMenu extends StatelessWidget {
                 Navigator.pushNamed(context, '/home');
               },
               isActive: ModalRoute.of(context).settings.name == '/' ||
-                  ModalRoute.of(context).settings.name == '/home',
+                  ModalRoute.of(context).settings.name == '/home' ||
+                  ModalRoute.of(context).settings.name.startsWith('/usuarios'),
             ),
             SideMenuItem(
               iconSrc: Icons.personal_video_rounded,
@@ -67,7 +68,7 @@ class SideMenu extends StatelessWidget {
                   ModalRoute.of(context).settings.name.startsWith('/roles'),
             ),
             SideMenuItem(
-              iconSrc: Icons.security_rounded,
+              iconSrc: Icons.privacy_tip_rounded,
               title: "Permisos",
               press: () {
                 context

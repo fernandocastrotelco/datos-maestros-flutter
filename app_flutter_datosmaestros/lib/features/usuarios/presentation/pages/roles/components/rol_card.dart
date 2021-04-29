@@ -61,13 +61,6 @@ class RolCard extends StatelessWidget {
                         ),
                         Column(
                           children: [
-                            Text(
-                              rol.createdAt,
-                              style:
-                                  Theme.of(context).textTheme.caption.copyWith(
-                                        color: isActive ? Colors.white70 : null,
-                                      ),
-                            ),
                             SizedBox(height: 5),
                             Icon(rol.activo == 1
                                 ? Icons.check_circle_outline_outlined

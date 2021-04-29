@@ -1,4 +1,5 @@
 import 'package:app_flutter_datosmaestros/constants.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/permiso.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/permisos_bloc.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/presentation/bloc/roles_bloc.dart';
@@ -156,7 +157,7 @@ class RolesDetallePage extends StatelessWidget {
                                                           .spaceBetween,
                                                   children: [
                                                     Icon(
-                                                      Icons.add,
+                                                      Icons.delete_rounded,
                                                       color: Colors.white,
                                                     ),
                                                     Text(
@@ -202,8 +203,19 @@ class RolesDetallePage extends StatelessWidget {
                                                 children: [
                                                   IconButton(
                                                       icon: Icon(Icons.edit),
-                                                      onPressed: () {}),
-                                                  Icon(Icons.delete)
+                                                      onPressed: () {
+                                                        context
+                                                            .read<
+                                                                PermisosBloc>()
+                                                            .add(GetPermisosPagedEvent(Pagina(
+                                                                numero: 1,
+                                                                tamanio: 5,
+                                                                consulta: permiso
+                                                                    .permiso)));
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            '/permisos');
+                                                      }),
                                                 ],
                                               ))
                                             ]);

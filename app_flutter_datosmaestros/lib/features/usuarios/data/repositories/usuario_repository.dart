@@ -1,4 +1,5 @@
 import 'package:app_flutter_datosmaestros/features/usuarios/data/datasources/login_remote_datasource.dart';
+import 'package:app_flutter_datosmaestros/features/usuarios/data/models/usuario_model.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/pagina.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/permiso.dart';
 import 'package:app_flutter_datosmaestros/features/usuarios/domain/entities/rol.dart';
@@ -166,6 +167,20 @@ class UsuarioRepository implements IUsuarioRepository {
         return Left(e);
       } else {
         return Left(ServerFailure(message: "No se pudo eliminar el rol"));
+      }
+    }
+  }
+
+  @override
+  Future<Either<IFailure, Usuario>> createUsuario(UsuarioModel usuario) async {
+    try {
+      final result = await remoteDatasource.crearUsuario(usuario);
+      return Right(result);
+    } catch (e) {
+      if (e is ServerFailure) {
+        return Left(e);
+      } else {
+        return Left(ServerFailure(message: "No se pudo crear el usuario"));
       }
     }
   }

@@ -37,4 +37,15 @@ class UsuarioModel extends Usuario {
           obj["sistemas"].map((x) => SistemaModel.fromMap(x))),
     );
   }
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "user": user,
+        "nombre": nombre,
+        "password": password,
+        "personas_id": personasId,
+        "activo": activo,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
+      };
 }
